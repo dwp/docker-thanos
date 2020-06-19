@@ -1,6 +1,6 @@
 # docker-thanos
 
-## Rebuild of Thanos Docker image for DataWorks
+## Rebuild of Thanos Docker image on Alpine
 
 This repo contains Makefile, and Dockerfile to fit the standard pattern.
 This repo is a base to create new Docker image repos, adding the githooks submodule, making the repo ready for use.
