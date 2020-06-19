@@ -22,7 +22,7 @@ else
     /bin/thanos sidecar \
     --http-address=0.0.0.0:10902 \
     --grpc-address=0.0.0.0:10901 \
-    --tsdb.path=/path/to/prometheus/data/dir \
+    --tsdb.path=/prometheus \
     --prometheus.url=http://localhost:9090 \
     --objstore.config-file=bucket.yml
 fi
