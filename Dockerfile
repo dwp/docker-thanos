@@ -13,7 +13,8 @@ RUN curl -k -LSs --output /tmp/thanos.tar.gz \
     rm -f /tmp/thanos.tar.gz && \
     mv /tmp/thanos /bin/ && \
     mkdir -p /thanos && \
-    chown -R nobody:nogroup /thanos
+    mkdir -p /etc/thanos && \
+    chown -R nobody:nogroup /etc/thanos /thanos
 
 VOLUME [ "/thanos" ]
 
