@@ -1,10 +1,11 @@
-FROM alpine:3.12.0 as BASE
+FROM alpine:3.12.0
 
 ARG THANOS_VERSION=0.12.2
 
 # Dependencies
 RUN apk add --update --no-cache \
-    curl
+    curl \
+    aws-cli
 
 # Download prometheus
 RUN curl -k -LSs --output /tmp/thanos.tar.gz \
