@@ -1,10 +1,11 @@
-FROM alpine:3.12.0 as BASE
+FROM alpine:3.12.0
 
 ARG THANOS_VERSION=0.12.2
 
 # Dependencies
 RUN apk add --update --no-cache \
-    curl
+    curl \
+    aws-cli
 
 # Download prometheus
 RUN curl -k -LSs --output /tmp/thanos.tar.gz \
@@ -13,7 +14,8 @@ RUN curl -k -LSs --output /tmp/thanos.tar.gz \
     rm -f /tmp/thanos.tar.gz && \
     mv /tmp/thanos /bin/ && \
     mkdir -p /thanos && \
-    chown -R nobody:nogroup /thanos
+    mkdir -p /etc/thanos && \
+    chown -R nobody:nogroup /etc/thanos /thanos
 
 VOLUME [ "/thanos" ]
 
