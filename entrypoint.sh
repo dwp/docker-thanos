@@ -1,12 +1,12 @@
 #!/bin/sh
 set -e
 echo "INFO: Checking container configuration..."
-if [ -z "${PROMETHEUS_CONFIG_S3_BUCKET}" -o -z "${PROMETHEUS_CONFIG_S3_PREFIX}" ]; then
-  echo "ERROR: PROMETHEUS_CONFIG_S3_BUCKET and PROMETHEUS_CONFIG_S3_PREFIX environment variables must be provided"
+if [ -z "${THANOS_CONFIG_S3_BUCKET}" -o -z "${THANOS_CONFIG_S3_PREFIX}" ]; then
+  echo "ERROR: THANOS_CONFIG_S3_BUCKET and THANOS_CONFIG_S3_PREFIX environment variables must be provided"
   exit 1
 fi
 
-S3_URI="s3://${PROMETHEUS_CONFIG_S3_BUCKET}/${PROMETHEUS_CONFIG_S3_PREFIX}"
+S3_URI="s3://${THANOS_CONFIG_S3_BUCKET}/${THANOS_CONFIG_S3_PREFIX}"
 
 # If either of the AWS credentials variables were provided, validate them
 if [ -n "${AWS_ACCESS_KEY_ID}${AWS_SECRET_ACCESS_KEY}" ]; then
@@ -51,17 +51,19 @@ aws ${PROFILE_OPTION} s3 cp ${S3_URI}/bucket.yml /etc/thanos/bucket.yml
 echo "INFO: Starting thanos..."
 if [ $THANOS_MODE == "query" ]; then
   /bin/thanos query \
-  --http-address=0.0.0.0:9090 \
+  --http-address="0.0.0.0:9090" \
   --store=thanos-sidecar:10901
     
 elif [ $THANOS_MODE == "store" ]; then
   /bin/thanos store \
   --data-dir=/local/state/data/dir \
+  --http-address="0.0.0.0:10902" \
+  --grpc-address="0.0.0.0:10901" \
   --objstore.config-file=/etc/thanos/bucket.yml
 else
   /bin/thanos sidecar \
-  --http-address=0.0.0.0:10902 \
-  --grpc-address=0.0.0.0:10901 \
+  --http-address="0.0.0.0:10902" \
+  --grpc-address="0.0.0.0:10901" \
   --tsdb.path=/prometheus \
   --prometheus.url=http://localhost:9090 \
   --objstore.config-file=/etc/thanos/bucket.yml

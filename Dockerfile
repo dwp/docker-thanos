@@ -27,4 +27,4 @@ RUN chown nobody:nogroup entrypoint.sh
 
 ENV THANOS_MODE=sidecar
 
-ENTRYPOINT [ ./entrypoint.sh ]
+ENTRYPOINT [ "./entrypoint.sh" ]
