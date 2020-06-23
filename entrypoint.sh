@@ -48,11 +48,16 @@ fi
 echo "INFO: Copying thanos configuration file from ${S3_URI} to /etc/thanos..."
 aws ${PROFILE_OPTION} s3 cp ${S3_URI}/bucket.yml /etc/thanos/bucket.yml
 
+for HOSTNAME in ${STORE_HOSTNAMES};
+do
+    STORE_ARGS=${STORE_ARGS}"--store=${HOSTNAME}:10901 ";
+done
+
 echo "INFO: Starting thanos..."
 if [ $THANOS_MODE == "query" ]; then
   /bin/thanos query \
   --http-address="0.0.0.0:9090" \
-  --store=thanos-sidecar:10901
+  ${STORE_ARGS}
     
 elif [ $THANOS_MODE == "store" ]; then
   /bin/thanos store \
