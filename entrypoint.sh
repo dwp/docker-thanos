@@ -46,7 +46,7 @@ else
 fi
 
 echo "INFO: Copying thanos configuration file from ${S3_URI} to /etc/thanos..."
-aws ${PROFILE_OPTION} s3 cp ${S3_URI}/bucket.yml /etc/thanos/bucket.yml
+aws ${PROFILE_OPTION} s3 sync ${S3_URI}/ /etc/thanos/
 
 for HOSTNAME in ${STORE_HOSTNAMES};
 do
@@ -54,22 +54,30 @@ do
 done
 
 echo "INFO: Starting thanos..."
-if [ $THANOS_MODE == "query" ]; then
+if [ ${THANOS_MODE} == "query" ]; then
   /bin/thanos query \
-  --http-address="0.0.0.0:9090" \
-  ${STORE_ARGS}
-    
-elif [ $THANOS_MODE == "store" ]; then
+    --http-address="0.0.0.0:9090" \
+    ${STORE_ARGS}
+elif [ ${THANOS_MODE} == "store" ]; then
   /bin/thanos store \
-  --data-dir=/local/state/data/dir \
-  --http-address="0.0.0.0:10902" \
-  --grpc-address="0.0.0.0:10901" \
-  --objstore.config-file=/etc/thanos/bucket.yml
+    --data-dir="/thanos" \
+    --http-address="0.0.0.0:10902" \
+    --grpc-address="0.0.0.0:10901" \
+    --objstore.config-file="/etc/thanos/bucket.yml"
+elif [ ${THANOS_MODE} == "rule" ]; then
+  /bin/thanos rule \
+    --rule-file="/etc/thanos/rules/*.rules.yaml" \
+    --alert.query-url="http://"${QUERY_URL} \
+    --alertmanagers.url="http://"${ALERTMANAGER_URL} \
+    --query=${QUERY_URL} \
+    --data-dir="/thanos" \
+    --objstore.config-file="/etc/thanos/bucket.yml" \
+    --http-address="0.0.0.0:9090" 
 else
   /bin/thanos sidecar \
-  --http-address="0.0.0.0:10902" \
-  --grpc-address="0.0.0.0:10901" \
-  --tsdb.path=/prometheus \
-  --prometheus.url=http://localhost:9090 \
-  --objstore.config-file=/etc/thanos/bucket.yml
+    --http-address="0.0.0.0:10902" \
+    --grpc-address="0.0.0.0:10901" \
+    --tsdb.path="/prometheus" \
+    --prometheus.url="http://localhost:9090" \
+    --objstore.config-file="/etc/thanos/bucket.yml"
 fi
