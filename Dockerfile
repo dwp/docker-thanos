@@ -1,6 +1,6 @@
 FROM alpine:3.12.0
 
-ARG THANOS_VERSION=0.12.2
+ARG THANOS_VERSION=0.17.2
 
 # Dependencies
 RUN apk add --update --no-cache \
