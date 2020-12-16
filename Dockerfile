@@ -3,12 +3,12 @@ FROM alpine:3.12
 ARG THANOS_VERSION=0.17.2
 
 # Dependencies
-RUN apk add --update --no-cache \
+RUN apk add --update --upgrade --no-cache \
     curl \
     aws-cli \
-    openssl>1.1.1i-r0
+    openssl>=1.1.1i
 
-# Download prometheus
+# Downwnload thanos
 RUN curl -k -LSs --output /tmp/thanos.tar.gz \
     https://github.com/thanos-io/thanos/releases/download/v${THANOS_VERSION}/thanos-${THANOS_VERSION}.linux-amd64.tar.gz && \
     tar -C /tmp --strip-components=1 -zoxf /tmp/thanos.tar.gz && \
