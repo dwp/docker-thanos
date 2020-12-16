@@ -1,4 +1,4 @@
-FROM alpine:3.12.0
+FROM alpine:3.12
 
 ARG THANOS_VERSION=0.17.2
 
