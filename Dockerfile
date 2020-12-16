@@ -5,7 +5,8 @@ ARG THANOS_VERSION=0.17.2
 # Dependencies
 RUN apk add --update --no-cache \
     curl \
-    aws-cli
+    aws-cli \
+    openssl>1.1.1i-r0
 
 # Download prometheus
 RUN curl -k -LSs --output /tmp/thanos.tar.gz \
