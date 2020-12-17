@@ -74,10 +74,10 @@ if [ ${THANOS_MODE} == "query" ]; then
     --objstore.config-file="/etc/thanos/bucket.yml" \
     --http-address="0.0.0.0:9090"
 else
-    /bin/thanos sidecar \
+    /bin/thanos receive \
     --http-address="0.0.0.0:10902" \
     --grpc-address="0.0.0.0:10901" \
+    --remote-write.address="0.0.0.0:10903" \
     --tsdb.path="/prometheus" \
-    --prometheus.url="http://localhost:9090" \
     --objstore.config-file="/etc/thanos/bucket.yml"
 fi
