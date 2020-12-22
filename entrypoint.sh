@@ -56,6 +56,7 @@ done
 echo "INFO: Starting thanos..."
 if [ ${THANOS_MODE} == "query" ]; then
     /bin/thanos query \
+    --store.unhealthy-timeout=1m \
     --http-address="0.0.0.0:9090" \
     ${STORE_ARGS}
     elif [ ${THANOS_MODE} == "store" ]; then
@@ -79,5 +80,8 @@ else
     --grpc-address="0.0.0.0:10901" \
     --remote-write.address="0.0.0.0:10903" \
     --tsdb.path="/prometheus" \
-    --objstore.config-file="/etc/thanos/bucket.yml"
+    --objstore.config-file="/etc/thanos/bucket.yml" \
+    --tsdb.wal-compression \
+    --labels="receive_env"=${RECEIVE_ENV} \
+    --labels="tenant"="receive_"${RECEIVE_ENV}
 fi
