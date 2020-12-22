@@ -82,6 +82,6 @@ else
     --tsdb.path="/prometheus" \
     --objstore.config-file="/etc/thanos/bucket.yml" \
     --tsdb.wal-compression \
-    --label='receive_env=${RECEIVE_ENV}' \
-    --label='tenant=receive_${RECEIVE_ENV}'
+    --label="receive_env="${RECEIVE_ENV} \
+    --label="tenant=receive_"${RECEIVE_ENV}
 fi
