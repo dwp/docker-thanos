@@ -83,5 +83,6 @@ else
     --objstore.config-file="/etc/thanos/bucket.yml" \
     --tsdb.wal-compression \
     --label="receive_env=\"${RECEIVE_ENV}\"" \
-    --label="tenant=\"receive_${RECEIVE_ENV}\""
+    --label="tenant=\"receive_${RECEIVE_ENV}\"" \
+    --receive.default-tenant-id="receive_${RECEIVE_ENV}"
 fi
