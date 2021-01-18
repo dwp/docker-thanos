@@ -45,8 +45,12 @@ else
     echo "INFO: Using attached IAM roles/instance profiles to authenticate with S3 as no AWS_ACCESS_KEY_ID or AWS_SECRET_ACCESS_KEY have been provided"
 fi
 
-echo "INFO: Copying thanos configuration file from ${S3_URI} to /etc/thanos..."
-aws ${PROFILE_OPTION} s3 sync ${S3_URI}/ /etc/thanos/
+if grep -qs '/etc/thanos/' /proc/mounts; then
+    echo "Config mounted as Volume from S3"
+else
+    echo "INFO: Copying prometheus configuration file(s) from ${S3_URI} to /etc/thanos..."
+    aws ${PROFILE_OPTION} s3 sync ${S3_URI}/ /etc/thanos/
+fi
 
 for HOSTNAME in ${STORE_HOSTNAMES};
 do
