@@ -14,8 +14,7 @@ RUN curl -k -LSs --output /tmp/thanos.tar.gz \
     tar -C /tmp --strip-components=1 -zoxf /tmp/thanos.tar.gz && \
     rm -f /tmp/thanos.tar.gz && \
     mv /tmp/thanos /bin/ && \
-    COPY --from=thanos /bin/thanos /bin/thanos
-RUN mkdir -p /thanos && \
+    mkdir -p /thanos && \
     mkdir -p /etc/thanos && \
     chown -R nobody:nogroup /etc/thanos /thanos
 
