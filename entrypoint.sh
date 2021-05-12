@@ -62,7 +62,7 @@ if [ ${THANOS_MODE} == "query" ]; then
     /bin/thanos query \
     --store.unhealthy-timeout=1m \
     --http-address="0.0.0.0:9090" \
-    --query.lookback-delta="24h"
+    --query.lookback-delta="24h" \
     ${STORE_ARGS}
     elif [ ${THANOS_MODE} == "store" ]; then
     /bin/thanos store \
