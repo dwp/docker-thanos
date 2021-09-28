@@ -20,5 +20,5 @@ There is also a pipeline for this repo which creates the ECS repository in mgmt 
 
 When making changes, these should always be tested locally first by running this from the root:
 
-docker run -it $(docker build -q .)
+`docker run -it $(docker build -q .)`
 This will build and run a local version of this image, which you can then go in to and check it has the relevant packages installed.
