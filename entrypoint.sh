@@ -1,5 +1,7 @@
 #!/bin/sh
-set -e
+
+set +x
+
 echo "INFO: Checking container configuration..."
 if [ -z "${THANOS_CONFIG_S3_BUCKET}" -o -z "${THANOS_CONFIG_S3_PREFIX}" ]; then
     echo "ERROR: THANOS_CONFIG_S3_BUCKET and THANOS_CONFIG_S3_PREFIX environment variables must be provided"
@@ -58,21 +60,20 @@ do
 done
 
 echo "INFO: Starting thanos..."
-if [ ${THANOS_MODE} == "query" ]; then
+if [ "$THANOS_MODE" = "query" ]; then
     /bin/thanos query \
     --store.unhealthy-timeout=1m \
     --http-address="0.0.0.0:9090" \
-    --query.lookback-delta="24h" \
-    --log.level=debug \
+    --query.lookback-delta="24h"
     ${STORE_ARGS}
-    elif [ ${THANOS_MODE} == "store" ]; then
+    elif [ "$THANOS_MODE" = "store" ]; then
     /bin/thanos store \
-    --data-dir="/thanos" \
+    --data-dir="/data/thanos" \
     --http-address="0.0.0.0:9090" \
     --grpc-address="0.0.0.0:10901" \
     --objstore.config-file="/etc/thanos/bucket.yml" \
-    --log.level=debug
-    elif [ ${THANOS_MODE} == "rule" ]; then
+    --min-time=-52w
+    elif [ "$THANOS_MODE" = "rule" ]; then
     /bin/thanos rule \
     --rule-file="/etc/thanos/rules/*.rules.yaml" \
     --alert.query-url="http://"${QUERY_URL} \
