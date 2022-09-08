@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set +x
+set -x
 
 echo "INFO: Checking container configuration..."
 if [ -z "${THANOS_CONFIG_S3_BUCKET}" -o -z "${THANOS_CONFIG_S3_PREFIX}" ]; then
@@ -64,7 +64,8 @@ if [ "$THANOS_MODE" = "query" ]; then
     /bin/thanos query \
     --store.unhealthy-timeout=1m \
     --http-address="0.0.0.0:9090" \
-    --query.lookback-delta="24h"
+    --query.lookback-delta="24h" \
+    --log.level=debug \
     ${STORE_ARGS}
     elif [ "$THANOS_MODE" = "store" ]; then
     /bin/thanos store \
@@ -72,6 +73,7 @@ if [ "$THANOS_MODE" = "query" ]; then
     --http-address="0.0.0.0:9090" \
     --grpc-address="0.0.0.0:10901" \
     --objstore.config-file="/etc/thanos/bucket.yml" \
+    --log.level=debug \
     --min-time=-52w
     elif [ "$THANOS_MODE" = "rule" ]; then
     /bin/thanos rule \
@@ -93,5 +95,6 @@ else
     --tsdb.retention=3d \
     --label="receive_env=\"${RECEIVE_ENV}\"" \
     --label="tenant=\"receive_${RECEIVE_ENV}\"" \
-    --receive.default-tenant-id="receive_${RECEIVE_ENV}"
+    --receive.default-tenant-id="receive_${RECEIVE_ENV}" \
+    --log.level=debug
 fi
