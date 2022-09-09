@@ -74,7 +74,10 @@ if [ "$THANOS_MODE" = "query" ]; then
     --grpc-address="0.0.0.0:10901" \
     --objstore.config-file="/etc/thanos/bucket.yml" \
     --log.level=debug \
-    --min-time=-52w
+    --min-time=-52w \
+    --chunk-pool-size=6GB \
+    --index-cache-size=500MB \
+    --sync-block-duration=6m
     elif [ "$THANOS_MODE" = "rule" ]; then
     /bin/thanos rule \
     --rule-file="/etc/thanos/rules/*.rules.yaml" \
