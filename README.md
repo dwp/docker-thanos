@@ -1,3 +1,5 @@
+# DO NOT USE THIS REPO - MIGRATED TO GITLAB
+
 # docker-thanos
 
 ## Rebuild of Thanos Docker image on Alpine
